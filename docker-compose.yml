@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  iww-app:
+    image: dracowhitefire/iww-app
+    volumes:
+        - ./:/var/www/iww:ro
+    build:
+      dockerfile: Dockerfile
+      context: .
+    networks:
+        - php-nginx-socket
+  nginx:
+    depends_on:
+        - iww-app
+    image: nginx:1.17.5-alpine
+    ports:
+        - '80:80'
+    networks:
+        - php-nginx-socket
+    volumes:
+        - ./nginx.conf:/etc/nginx/conf.d/iww.conf:ro
+networks:
+  php-nginx-socket:
+          driver: bridge
